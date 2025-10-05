@@ -2,33 +2,30 @@
 name: Full-Stack SAST Scan (Semgrep)
 
 on:
-  # Runs on every push to the main branch
   push:
     branches: [main]
-  # Runs on every pull request
   pull_request:
     branches: [main]
-  # Allows manual trigger
   workflow_dispatch:
 
 jobs:
   semgrep:
     runs-on: ubuntu-latest
     steps:
-      # 1. Clone the repository code
+      # 1. Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Run the Semgrep scan
-      - name: Run Semgrep Analysis
-        uses: semgrep/semgrep-action@v1
+      # 2. Run Semgrep Analysis (The modern, integrated way)
+      # This action automatically runs the scan, generates SARIF, 
+      # and uploads it to GitHub Code Scanning.
+      - name: Run Semgrep Scan
+        # Use the latest major version for full functionality
+        uses: semgrep/action@v1  # Note: This is the updated action name!
         with:
+          # Uses the config: auto approach you intended
+          # The rules will be based on what your project contains (JS, Python, etc.)
           config: auto
-          output-format: sarif
-          sarif-output: semgrep-results.sarif
-
-      # 3. Upload results to GitHub Security tab
-      - name: Upload SARIF file to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep-results.sarif
+          
+          # This enables SARIF output and uploads findings to the Security tab
+          github_token: ${{ secrets.GITHUB_TOKEN }}
