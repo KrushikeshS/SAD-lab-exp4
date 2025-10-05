@@ -16,16 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Run Semgrep Analysis (The modern, integrated way)
-      # This action automatically runs the scan, generates SARIF, 
-      # and uploads it to GitHub Code Scanning.
+      # 2. Run Semgrep Scan
       - name: Run Semgrep Scan
-        # Use the latest major version for full functionality
-        uses: semgrep/action@v1  # Note: This is the updated action name!
+        # CORRECTED LINE: Using semgrep/semgrep-action
+        uses: semgrep/semgrep-action@v1 
         with:
-          # Uses the config: auto approach you intended
-          # The rules will be based on what your project contains (JS, Python, etc.)
           config: auto
-          
-          # This enables SARIF output and uploads findings to the Security tab
           github_token: ${{ secrets.GITHUB_TOKEN }}
